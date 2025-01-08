@@ -12,7 +12,7 @@ account = os.getenv('account')
 password = os.getenv('password')
 
 
-class HutOpenApi():
+class HutOpenApi:
 
     def get_grade_cet_4_6(self, token):
         headers = {
@@ -58,6 +58,12 @@ class HutOpenApi():
         response = requests.post(url, headers=headers, params=querystring)
 
         json_response = response.json()
+
+        code = json_response["code"]
+        if (code == '0'):
+            token = serf.login(account, password)
+            return serf.get_grade(token, semester)
+        
         print(json_response)
         return json_response
 
@@ -93,9 +99,9 @@ class HutOpenApi():
 
 if __name__ == '__main__':
     hutOpenApi = HutOpenApi()
-    token = hutOpenApi.login(account, password)
-    hutOpenApi.get_grade(token, '2024-2025-1')
+    # token = hutOpenApi.login(account, password)
+    hutOpenApi.get_grade('token', '2024-2025-1')
 
-    # cet_6, cet_4 = get_grade_cet_4_6(token)
-    # print("=======六级================四级============")
-    # print(cet_6, cet_4)
+# cet_6, cet_4 = get_grade_cet_4_6(token)
+# print("=======六级================四级============")
+# print(cet_6, cet_4)

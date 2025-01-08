@@ -17,3 +17,7 @@ password = os.getenv('password')
 
 print(account)
 print(password)
+
+token_map = dict()
+
+print(token_map.get('access_token')==None)

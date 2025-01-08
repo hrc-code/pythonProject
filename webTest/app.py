@@ -3,22 +3,41 @@ import os
 from flask import Flask, request
 
 from login_moblie import HutOpenApi
-
-app = Flask(__name__)
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
+app = Flask(__name__)
+
 account = os.getenv('account')
 password = os.getenv('password')
+
+token_map = dict()
+
+hutOpenApi = HutOpenApi()
+
+
+# 获取token
+def get_token():
+    token = token_map.get(account)
+    if token is None:
+        token = hutOpenApi.login(account, password)
+        token_map[account] = token
+    return token
 
 
 @app.route("/grade")
 def test():
     semester = request.args.get('semester')
-    hutOpenApi = HutOpenApi()
     token = hutOpenApi.login(account, password)
+    grade = hutOpenApi.get_grade(token, semester)
+    return grade
+
+
+@app.route("/v2/grade")
+def get_grade():
+    semester = request.args.get('semester')
+    token = get_token()
     grade = hutOpenApi.get_grade(token, semester)
     return grade
 
@@ -26,8 +45,15 @@ def test():
 @app.route("/grade/now")
 def get_now_grade():
     semester = '2024-2025-1'
-    hutOpenApi = HutOpenApi()
-    token = hutOpenApi.login(account, password)
+    token = get_token()
+    grade = hutOpenApi.get_grade(token, semester)
+    return grade
+
+
+@app.route("/v2/grade/now")
+def get_now_grade2():
+    semester = '2024-2025-1'
+    token = get_token()
     grade = hutOpenApi.get_grade(token, semester)
     return grade
 
