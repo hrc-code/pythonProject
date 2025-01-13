@@ -60,9 +60,7 @@ class HutOpenApi:
         json_response = response.json()
 
         code = json_response["code"]
-        if (code == '0'):
-            token = serf.login(account, password)
-            return serf.get_grade(token, semester)
+
         
         print(json_response)
         return json_response
