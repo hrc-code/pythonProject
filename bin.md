@@ -1,7 +1,10 @@
 ### 安装虚拟环境  最后一个为虚拟环境的名字
 python -m venv .venv
 ### 激活虚拟环境
+<!-- windows -->
 .venv\Scripts\activate
+<!-- linux -->
+source .venv/bin/activate
 ### 退出虚拟环境
 deactivate
 ### 导入依赖
