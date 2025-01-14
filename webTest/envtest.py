@@ -12,8 +12,8 @@ print(password)
 
 
 
-account = os.getenv('account')
-password = os.getenv('password')
+account = os.getenv('zhgd_account')
+password = os.getenv('zhgd_password')
 
 print(account)
 print(password)

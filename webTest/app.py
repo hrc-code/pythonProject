@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, request
-
+import hut_zhgd
 from login_moblie import HutOpenApi
 from dotenv import load_dotenv
 
@@ -56,6 +56,12 @@ def get_now_grade2():
     token = get_token()
     grade = hutOpenApi.get_grade(token, semester)
     return grade
+
+# 查询电费
+
+@app.route("/getElectricity")
+def get_electricity():
+    return  hut_zhgd.get_electricity()
 
 
 if __name__ == '__main__':
