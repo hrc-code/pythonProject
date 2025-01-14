@@ -4,6 +4,7 @@
 *.env
 *.http
 
+http-client.private.env.json
 node_modules/
 
 .venv
