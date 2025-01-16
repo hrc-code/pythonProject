@@ -4,7 +4,7 @@ from flask import Flask, request
 import hut_zhgd
 from login_moblie import HutOpenApi
 from dotenv import load_dotenv
-
+import logging
 load_dotenv()
 
 app = Flask(__name__)
@@ -12,50 +12,45 @@ app = Flask(__name__)
 account = os.getenv('account')
 password = os.getenv('password')
 
-token_map = dict()
 
 hutOpenApi = HutOpenApi()
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('app_loggerr')
 
-# 获取token
-def get_token():
-    token = token_map.get(account)
-    if token is None:
-        token = hutOpenApi.login(account, password)
-        token_map[account] = token
-    return token
+
+
+
+# @app.route("/grade")
+# def test():
+#     semester = request.args.get('semester')
+#     token = hutOpenApi.login(account, password)
+#     grade = hutOpenApi.get_grade(token, semester)
+#     return grade
 
 
 @app.route("/grade")
-def test():
-    semester = request.args.get('semester')
-    token = hutOpenApi.login(account, password)
-    grade = hutOpenApi.get_grade(token, semester)
-    return grade
-
-
-@app.route("/v2/grade")
 def get_grade():
     semester = request.args.get('semester')
-    token = get_token()
-    grade = hutOpenApi.get_grade(token, semester)
+    grade = hutOpenApi.get_grade (semester)
+    logger.info("返回结果:%s",grade)
     return grade
 
 
 @app.route("/grade/now")
 def get_now_grade():
     semester = '2024-2025-1'
-    token = get_token()
-    grade = hutOpenApi.get_grade(token, semester)
+    grade = hutOpenApi.get_grade( semester)
+    logger.info("返回结果:%s",grade)
     return grade
 
 
-@app.route("/v2/grade/now")
-def get_now_grade2():
-    semester = '2024-2025-1'
-    token = get_token()
-    grade = hutOpenApi.get_grade(token, semester)
-    return grade
+# @app.route("/v2/grade/now")
+# def get_now_grade2():
+#     semester = '2024-2025-1'
+#     token = get_token()
+#     grade = hutOpenApi.get_grade(token, semester)
+#     return grade
 
 # 查询电费
 

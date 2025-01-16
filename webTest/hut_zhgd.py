@@ -43,7 +43,7 @@ def get_token():
     return token
 
 def remove_token():
-     token_map.pop('account','key not found')
+     token_map.pop(account,'key not found')
 # 查电费1
 
 def get_electricity_1(userToken):

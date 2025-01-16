@@ -3,6 +3,10 @@ import os
 
 from js import jsx
 import requests
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('login_moblie_logger')
 
 from dotenv import load_dotenv
 
@@ -44,7 +48,9 @@ class HutOpenApi:
         return cet_6, cet_4
 
     # 获取成绩
-    def get_grade(serf, token, semester):
+    def do_get_grade(self, semester):
+
+        token = get_token()
         # semester 2023-2024-2
         url = "https://jwxtsj.hut.edu.cn/njwhd/student/termGPA"
 
@@ -65,7 +71,24 @@ class HutOpenApi:
         print(json_response)
         return json_response
 
-    def login(this, username, password):
+    def get_grade(self, semester):
+        result =  self.do_get_grade(semester)
+        logger.info(result)
+        code = result["code"]
+        count = 0
+        if (code == '0'):
+            while(count < 3):
+             count = count + 1
+             logger.info("第%d次重新获取成绩",count)
+             remove_token()
+             result =  self.do_get_grade(semester)
+             code = result["code"]
+             if (code == '1'):
+                break
+        return result 
+
+
+    def login(self, username, password):
         # 加密
         txt = "\"" + password + "\""
         key = os.getenv("hut_mobile_secret_key")
@@ -94,6 +117,21 @@ class HutOpenApi:
         print(token)
         return token
 
+
+token_map = dict()
+
+
+hutOpenApi = HutOpenApi()
+# 获取token
+def get_token():
+    token = token_map.get(account)
+    if token is None:
+        token = hutOpenApi.login(account, password)
+        token_map[account] = token
+    return token
+
+def remove_token():
+     token_map.pop(account,'key not found')
 
 if __name__ == '__main__':
     hutOpenApi = HutOpenApi()
